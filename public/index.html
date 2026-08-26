@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>FARIS — Media Downloader</title>
+
+<meta
+name="description"
+content="FARIS Media Downloader">
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    color: white;
+
+    font-family:
+        Inter,
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(124,58,237,.35),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 85% 90%,
+            rgba(37,99,235,.30),
+            transparent 30%
+        ),
+
+        #050507;
+}
+
+.container {
+    width:
+        min(
+            1000px,
+            calc(100% - 30px)
+        );
+
+    margin:
+        auto;
+
+    padding:
+        45px 0 60px;
+}
+
+header {
+    text-align:
+        center;
+
+    margin-bottom:
+        30px;
+}
+
+.logo {
+    width:
+        72px;
+
+    height:
+        72px;
+
+    margin:
+        auto auto 18px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        22px;
+
+    font-size:
+        25px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #2563eb
+        );
+
+    box-shadow:
+        0 20px 70px
+        rgba(124,58,237,.4);
+}
+
+h1 {
+    margin:
+        0;
+
+    font-size:
+        clamp(
+            34px,
+            7vw,
+            55px
+        );
+
+    letter-spacing:
+        -2px;
+}
+
+.subtitle {
+    margin-top:
+        10px;
+
+    color:
+        #a1a1aa;
+
+    font-size:
+        15px;
+}
+
+.card {
+    padding:
+        24px;
+
+    border:
+        1px solid
+        #27272a;
+
+    border-radius:
+        24px;
+
+    background:
+        rgba(
+            15,
+            15,
+            18,
+            .92
+        );
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.35);
+
+    backdrop-filter:
+        blur(20px);
+}
+
+.tabs {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        9px;
+
+    margin-bottom:
+        20px;
+}
+
+.tab {
+    padding:
+        14px 8px;
+
+    border:
+        1px solid
+        #27272a;
+
+    border-radius:
+        13px;
+
+    color:
+        #a1a1aa;
+
+    background:
+        #18181b;
+
+    cursor:
+        pointer;
+
+    font-weight:
+        800;
+
+    transition:
+        .2s;
+}
+
+.tab:hover {
+    color:
+        white;
+
+    border-color:
+        #52525b;
+}
+
+.tab.active {
+    color:
+        white;
+
+    border-color:
+        transparent;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #2563eb
+        );
+}
+
+.form {
+    display:
+        flex;
+
+    gap:
+        10px;
+}
+
+input {
+    flex:
+        1;
+
+    min-width:
+        0;
+
+    padding:
+        16px;
+
+    color:
+        white;
+
+    background:
+        #09090b;
+
+    border:
+        1px solid
+        #27272a;
+
+    border-radius:
+        13px;
+
+    outline:
+        none;
+
+    font-size:
+        15px;
+}
+
+input:focus {
+    border-color:
+        #8b5cf6;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(139,92,246,.1);
+}
+
+.process {
+    padding:
+        0 25px;
+
+    border:
+        0;
+
+    border-radius:
+        13px;
+
+    color:
+        white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #2563eb
+        );
+
+    cursor:
+        pointer;
+
+    font-weight:
+        900;
+
+    transition:
+        .2s;
+}
+
+.process:hover {
+    transform:
+        translateY(-1px);
+}
+
+.process:disabled {
+    opacity:
+        .5;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+}
+
+.hint {
+    margin-top:
+        10px;
+
+    color:
+        #71717a;
+
+    font-size:
+        13px;
+}
+
+.status {
+    display:
+        none;
+
+    margin-top:
+        18px;
+
+    padding:
+        13px 15px;
+
+    border-radius:
+        12px;
+
+    font-size:
+        14px;
+}
+
+.status.show {
+    display:
+        block;
+}
+
+.status.loading {
+    color:
+        #ddd6fe;
+
+    background:
+        rgba(
+            124,
+            58,
+            237,
+            .12
+        );
+}
+
+.status.success {
+    color:
+        #bbf7d0;
+
+    background:
+        rgba(
+            34,
+            197,
+            94,
+            .10
+        );
+}
+
+.status.error {
+    color:
+        #fecaca;
+
+    background:
+        rgba(
+            239,
+            68,
+            68,
+            .10
+        );
+}
+
+.result {
+    display:
+        none;
+
+    margin-top:
+        20px;
+}
+
+.result.show {
+    display:
+        block;
+}
+
+.result-title {
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    margin-bottom:
+        12px;
+}
+
+.result-title h2 {
+    margin:
+        0;
+
+    font-size:
+        18px;
+}
+
+.copy {
+    padding:
+        8px 12px;
+
+    border:
+        1px solid
+        #27272a;
+
+    border-radius:
+        9px;
+
+    color:
+        #ddd;
+
+    background:
+        #18181b;
+
+    cursor:
+        pointer;
+}
+
+.downloads {
+    display:
+        grid;
+
+    gap:
+        10px;
+
+    margin-bottom:
+        15px;
+}
+
+.download {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    padding:
+        13px;
+
+    border:
+        1px solid
+        #27272a;
+
+    border-radius:
+        12px;
+
+    background:
+        #18181b;
+}
+
+.download-name {
+    min-width:
+        0;
+
+    overflow:
+        hidden;
+
+    white-space:
+        nowrap;
+
+    text-overflow:
+        ellipsis;
+}
+
+.download a {
+    flex-shrink:
+        0;
+
+    padding:
+        9px 13px;
+
+    color:
+        white;
+
+    background:
+        #7c3aed;
+
+    border-radius:
+        9px;
+
+    text-decoration:
+        none;
+
+    font-size:
+        13px;
+
+    font-weight:
+        800;
+}
+
+pre {
+    margin:
+        0;
+
+    padding:
+        16px;
+
+    max-height:
+        450px;
+
+    overflow:
+        auto;
+
+    border:
+        1px solid
+        #27272a;
+
+    border-radius:
+        14px;
+
+    color:
+        #d4d4d8;
+
+    background:
+        #050506;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.6;
+}
+
+footer {
+    margin-top:
+        25px;
+
+    text-align:
+        center;
+
+    color:
+        #52525b;
+
+    font-size:
+        12px;
+}
+
+@media(max-width:650px) {
+
+    .container {
+        padding-top:
+            25px;
+    }
+
+    .card {
+        padding:
+            15px;
+    }
+
+    .tabs {
+        grid-template-columns:
+            1fr;
+    }
+
+    .form {
+        flex-direction:
+            column;
+    }
+
+    .process {
+        padding:
+            15px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+
+<div class="logo">
+F
+</div>
+
+<h1>
+FARIS
+</h1>
+
+<div class="subtitle">
+Media Downloader
+</div>
+
+</header>
+
+
+<div class="card">
+
+<div class="tabs">
+
+<button
+class="tab active"
+data-mode="tiktok">
+TikTok
+</button>
+
+<button
+class="tab"
+data-mode="youtube">
+YouTube
+</button>
+
+<button
+class="tab"
+data-mode="downr">
+Downr
+</button>
+
+</div>
+
+
+<div class="form">
+
+<input
+id="input"
+type="text"
+autocomplete="off"
+placeholder="Masukkan URL TikTok...">
+
+<button
+id="process"
+class="process">
+Proses
+</button>
+
+</div>
+
+
+<div
+id="hint"
+class="hint">
+Download TikTok tanpa watermark.
+</div>
+
+
+<div
+id="status"
+class="status">
+</div>
+
+
+<div
+id="result"
+class="result">
+
+<div class="result-title">
+
+<h2>
+Hasil
+</h2>
+
+<button
+id="copy"
+class="copy">
+Copy JSON
+</button>
+
+</div>
+
+
+<div
+id="downloads"
+class="downloads">
+</div>
+
+
+<pre
+id="output">
+</pre>
+
+</div>
+
+</div>
+
+
+<footer>
+© 2026 FARIS
+</footer>
+
+</div>
+
+
+<script>
+
+const input =
+    document.getElementById("input");
+
+const processButton =
+    document.getElementById("process");
+
+const hint =
+    document.getElementById("hint");
+
+const status =
+    document.getElementById("status");
+
+const result =
+    document.getElementById("result");
+
+const output =
+    document.getElementById("output");
+
+const downloads =
+    document.getElementById("downloads");
+
+const copy =
+    document.getElementById("copy");
+
+const tabs =
+    document.querySelectorAll(".tab");
+
+
+let mode =
+    "tiktok";
+
+let lastResult =
+    null;
+
+
+const config = {
+
+    tiktok: {
+        endpoint:
+            "/api/tiktok",
+
+        placeholder:
+            "Masukkan URL TikTok...",
+
+        hint:
+            "Download TikTok tanpa watermark."
+    },
+
+    youtube: {
+        endpoint:
+            "/api/youtube",
+
+        placeholder:
+            "Masukkan username atau URL YouTube...",
+
+        hint:
+            "Masukkan username atau URL channel YouTube."
+    },
+
+    downr: {
+        endpoint:
+            "/api/downr",
+
+        placeholder:
+            "Masukkan URL video/media...",
+
+        hint:
+            "Masukkan URL media yang ingin diproses."
+    }
+
+};
+
+
+function setStatus(
+    message,
+    type
+) {
+
+    status.textContent =
+        message;
+
+    status.className =
+        "status show " +
+        type;
+}
+
+
+function clearResult() {
+
+    result.classList.remove(
+        "show"
+    );
+
+    downloads.innerHTML =
+        "";
+
+    output.textContent =
+        "";
+
+    lastResult =
+        null;
+}
+
+
+tabs.forEach(tab => {
+
+    tab.addEventListener(
+        "click",
+        () => {
+
+            tabs.forEach(item => {
+                item.classList.remove(
+                    "active"
+                );
+            });
+
+            tab.classList.add(
+                "active"
+            );
+
+            mode =
+                tab.dataset.mode;
+
+            input.placeholder =
+                config[mode].placeholder;
+
+            hint.textContent =
+                config[mode].hint;
+
+            clearResult();
+
+            status.className =
+                "status";
+        }
+    );
+
+});
+
+
+function addDownload(
+    name,
+    url
+) {
+
+    if (!url)
+        return;
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.className =
+        "download";
+
+
+    const text =
+        document.createElement(
+            "div"
+        );
+
+    text.className =
+        "download-name";
+
+    text.textContent =
+        name;
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+    link.href =
+        url;
+
+    link.target =
+        "_blank";
+
+    link.rel =
+        "noopener noreferrer";
+
+    link.textContent =
+        "Download";
+
+
+    div.appendChild(
+        text
+    );
+
+    div.appendChild(
+        link
+    );
+
+    downloads.appendChild(
+        div
+    );
+}
+
+
+function renderDownloads(
+    data
+) {
+
+    downloads.innerHTML =
+        "";
+
+
+    if (
+        data?.result?.download
+    ) {
+
+        const d =
+            data.result.download;
+
+
+        addDownload(
+            "TikTok No Watermark",
+            d.no_watermark
+        );
+
+
+        addDownload(
+            "TikTok Watermark",
+            d.watermark
+        );
+
+    }
+
+
+    if (
+        data?.result?.url
+    ) {
+
+        addDownload(
+            "Download",
+            data.result.url
+        );
+
+    }
+
+
+    if (
+        data?.data?.url
+    ) {
+
+        addDownload(
+            "Download",
+            data.data.url
+        );
+
+    }
+
+
+    if (
+        Array.isArray(
+            data?.result?.links
+        )
+    ) {
+
+        data.result.links.forEach(
+            item => {
+
+                addDownload(
+                    item.type ||
+                    "Download",
+                    item.link
+                );
+
+            }
+        );
+
+    }
+
+}
+
+
+function showResult(
+    data
+) {
+
+    lastResult =
+        data;
+
+    output.textContent =
+        JSON.stringify(
+            data,
+            null,
+            2
+        );
+
+    renderDownloads(
+        data
+    );
+
+    result.classList.add(
+        "show"
+    );
+
+}
+
+
+async function processMedia() {
+
+    const value =
+        input.value.trim();
+
+
+    if (!value) {
+
+        setStatus(
+            "Masukkan URL terlebih dahulu.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    clearResult();
+
+
+    processButton.disabled =
+        true;
+
+    processButton.textContent =
+        "Memproses...";
+
+
+    setStatus(
+        "Sedang memproses...",
+        "loading"
+    );
+
+
+    try {
+
+        let body;
+
+
+        if (
+            mode === "youtube"
+        ) {
+
+            body = {
+                input: value
+            };
+
+        } else {
+
+            body = {
+                url: value
+            };
+
+        }
+
+
+        const response =
+            await fetch(
+                config[mode].endpoint,
+                {
+                    method:
+                        "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            body
+                        )
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        showResult(
+            data
+        );
+
+
+        if (
+            response.ok &&
+            data.success
+        ) {
+
+            setStatus(
+                "Berhasil diproses.",
+                "success"
+            );
+
+        } else {
+
+            setStatus(
+                data.error ||
+                data.message ||
+                "Request gagal.",
+                "error"
+            );
+
+        }
+
+    } catch (error) {
+
+        showResult({
+            success: false,
+            error:
+                error.message
+        });
+
+        setStatus(
+            "Terjadi kesalahan koneksi.",
+            "error"
+        );
+
+    } finally {
+
+        processButton.disabled =
+            false;
+
+        processButton.textContent =
+            "Proses";
+    }
+
+}
+
+
+processButton.addEventListener(
+    "click",
+    processMedia
+);
+
+
+input.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            processMedia();
+
+        }
+
+    }
+);
+
+
+copy.addEventListener(
+    "click",
+    async () => {
+
+        if (!lastResult)
+            return;
+
+        try {
+
+            await navigator.clipboard.writeText(
+                JSON.stringify(
+                    lastResult,
+                    null,
+                    2
+                )
+            );
+
+            copy.textContent =
+                "Copied!";
+
+            setTimeout(
+                () => {
+
+                    copy.textContent =
+                        "Copy JSON";
+
+                },
+                1500
+            );
+
+        } catch {
+
+            alert(
+                "Gagal menyalin JSON."
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+
+  </html>
